@@ -13,7 +13,7 @@ class MoviesController < ApplicationController
   def index
     @all_ratings = ['G','PG','PG-13','R']
     
-    if params[:ratings]
+    if params[:ratings] && !params[:ratings].empty?
       @ratings = params[:ratings].keys
       session[:ratings] = @ratings
     elsif session[:ratings]
