@@ -12,8 +12,35 @@ class MoviesController < ApplicationController
 
   def index
     @all_ratings = ['G','PG','PG-13','R']
-    @ratings = (params[:ratings].keys if params[:ratings]) || @all_ratings
-    @sort = params[:sort]
+    
+    if params[:ratings]
+      @ratings = params[:ratings].keys
+      session[:ratings] = @ratings
+    elsif session[:ratings]
+      @ratings = session[:ratings]
+      redirect = true
+    else
+      @ratings = @all_ratings
+    end
+    
+    if params[:sort]
+      @sort = params[:sort]
+      session[:sort] = @sort
+    elsif session[:sort]
+      @sort = session[:sort]
+      redirect = true
+    end
+    
+    if redirect
+      ratings_hash = {}
+      @ratings.each {|r| ratings_hash[r] = 1}
+      if @sort
+        redirect_to movies_path(sort: @sort, ratings: ratings_hash)
+      else
+        redirect_to movies_path(ratings: ratings_hash)
+      end
+    end
+      
     @movies = Movie.where(rating: @ratings).order(@sort)
   end
 
