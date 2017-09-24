@@ -34,6 +34,7 @@ class MoviesController < ApplicationController
     if redirect
       ratings_hash = {}
       @ratings.each {|r| ratings_hash[r] = 1}
+      flash.keep
       if @sort
         redirect_to movies_path(sort: @sort, ratings: ratings_hash)
       else
